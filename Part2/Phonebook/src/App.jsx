@@ -22,7 +22,7 @@ const App = () => {
     }
     peopleServices.deletePerson(id).then((res) => {
       setPeople(people.filter((person) => person.id !== id));
-      showError(`${res.name} was deleted`);
+      showError(`${person.name} was deleted`);
     });
   };
 
@@ -58,16 +58,23 @@ const App = () => {
           showError(`${res.name} has been updated`);
         })
         .catch((err) => {
+          console.log(err);
           showError(
             `Information of ${person.name} has been removed from the server`
           );
         });
     }
 
-    peopleServices.addPerson(objToAdded).then((res) => {
-      setPeople(people.concat(res));
-      return showError(`${res.name} has been added to Phonebook`);
-    });
+    peopleServices
+      .addPerson(objToAdded)
+      .then((res) => {
+        setPeople(people.concat(res));
+        return showError(`${res.name} has been added to Phonebook`);
+      })
+      .catch((err) => {
+        console.log(err.response.data.eror);
+        showError(err.response.data.eror);
+      });
   };
 
   const handleNameInput = (e) => {
